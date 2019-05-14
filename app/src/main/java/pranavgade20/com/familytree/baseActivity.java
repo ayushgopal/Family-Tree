@@ -1,6 +1,7 @@
 package pranavgade20.com.familytree;
 
 import android.content.Intent;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -167,5 +168,10 @@ public class baseActivity extends AppCompatActivity {
         }
 
         setListElements();
+    }
+
+    public void onFabPress(View v){
+        Intent i = new Intent(getApplicationContext(), homeActivity.class);
+        startActivity(i);
     }
 }

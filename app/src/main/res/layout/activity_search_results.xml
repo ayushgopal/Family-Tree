@@ -4,11 +4,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".baseActivity">
+    tools:context=".SearchResultsActivity">
 
     <ListView
-        android:id="@+id/relatives_list"
+        android:id="@+id/search_results"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
-
 </android.support.constraint.ConstraintLayout>

@@ -55,11 +55,14 @@ public class intermediateActivity extends AppCompatActivity {
             gp.load(new BufferedInputStream(new StringBufferInputStream(gedcomData)));
             gedcom.data = gp.getGedcom();
 
-            Intent intent = new Intent(getApplicationContext(), baseActivity.class);
-            Map<String, Individual> indivisuals = gedcom.data.getIndividuals();
-            Map.Entry<String, Individual> entry = indivisuals.entrySet().iterator().next();
-            String key= entry.getKey();
-            intent.putExtra("id", key);
+//            Intent intent = new Intent(getApplicationContext(), baseActivity.class);
+//            Map<String, Individual> indivisuals = gedcom.data.getIndividuals();
+//            Map.Entry<String, Individual> entry = indivisuals.entrySet().iterator().next();
+//            String key= entry.getKey();
+//            intent.putExtra("id", key);
+//            startActivity(intent);
+
+            Intent intent = new Intent(getApplicationContext(), homeActivity.class);
             startActivity(intent);
         } catch (Exception e) {
             e.printStackTrace();

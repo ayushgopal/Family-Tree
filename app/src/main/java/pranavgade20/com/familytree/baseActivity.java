@@ -104,7 +104,7 @@ public class baseActivity extends AppCompatActivity {
 
         Family currentFamily;
         try {
-            currentFamily = individual.getFamiliesWhereChild().get(0).getFamily();
+            currentFamily = individual.getFamiliesWhereSpouse().get(0).getFamily();
         } catch (Exception E) {
             currentFamily = null;
         }
@@ -161,10 +161,6 @@ public class baseActivity extends AppCompatActivity {
             Toast toast = Toast.makeText(getApplicationContext(), "Error!", Toast.LENGTH_LONG);
             toast.show();
         }
-
-        //set self name in the title
-        TextView selfName = (TextView) findViewById(R.id.self_details);
-        selfName.setText(individual.getFormattedName());
 
         setListElements();
     }

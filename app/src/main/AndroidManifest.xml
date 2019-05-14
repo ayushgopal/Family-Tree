@@ -19,7 +19,9 @@
             </intent-filter>
         </activity>
         <activity android:name=".baseActivity" />
-        <activity android:name=".intermediateActivity"></activity>
+        <activity android:name=".intermediateActivity" />
+        <activity android:name=".homeActivity" />
+        <activity android:name=".SearchResultsActivity"></activity>
     </application>
 
 </manifest>

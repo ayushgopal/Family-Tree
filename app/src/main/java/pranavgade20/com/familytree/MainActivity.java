@@ -19,4 +19,9 @@ public class MainActivity extends AppCompatActivity {
         intent.putExtra("url", "https://webtreeprint.com/tp_downloader.php?path=famous_gedcoms/royal92.ged&file=royal92.ged");
         startActivity(intent);
     }
+
+    public void register(View v){
+        Intent intent = new Intent(getApplicationContext(), RegisterActivity.class);
+        startActivity(intent);
+    }
 }

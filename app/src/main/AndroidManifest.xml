@@ -21,7 +21,8 @@
         <activity android:name=".baseActivity" />
         <activity android:name=".intermediateActivity" />
         <activity android:name=".homeActivity" />
-        <activity android:name=".SearchResultsActivity"></activity>
+        <activity android:name=".SearchResultsActivity" />
+        <activity android:name=".RegisterActivity"></activity>
     </application>
 
 </manifest>

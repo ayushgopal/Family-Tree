@@ -29,6 +29,14 @@ public class SearchResultsActivity extends AppCompatActivity {
             }
         }
 
+        if (results.size() == 0) {
+            ListDetails listDetails = new ListDetails();
+            listDetails.setRelation("Tap to try again");
+            listDetails.setName("No results found");
+            listDetails.setAge("");
+            results.add(listDetails);
+        }
+
         runOnUiThread(new Runnable() {
             @Override
             public void run() {

@@ -46,9 +46,13 @@ public class baseActivity extends AppCompatActivity {
                     @Override
                     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                         String id = relatives.get(i).getAge();
-                        Intent intent = new Intent(getApplicationContext(), baseActivity.class);
-
-                        intent.putExtra("id", id);
+                        Intent intent;
+                        if(id != null && !id.isEmpty()){
+                            intent = new Intent(getApplicationContext(), baseActivity.class);
+                            intent.putExtra("id", id);
+                        } else {
+                            intent = new Intent(getApplicationContext(), homeActivity.class);
+                        }
                         startActivity(intent);
                     }
                 });

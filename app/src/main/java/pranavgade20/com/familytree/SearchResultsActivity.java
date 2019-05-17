@@ -3,11 +3,12 @@ package pranavgade20.com.familytree;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
-import org.gedcom4j.model.Individual;
+import pranavgade20.com.familytree.gedcom4j.model.Individual;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -69,5 +70,10 @@ public class SearchResultsActivity extends AppCompatActivity {
         }
 
         search(searchQuery);
+    }
+
+    public void onFabPress(View v){
+        Intent i = new Intent(getApplicationContext(), homeActivity.class);
+        startActivity(i);
     }
 }

@@ -6,9 +6,9 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.TextView;
 
-import org.gedcom4j.exception.GedcomParserException;
-import org.gedcom4j.model.Individual;
-import org.gedcom4j.parser.GedcomParser;
+import pranavgade20.com.familytree.gedcom4j.exception.GedcomParserException;
+import pranavgade20.com.familytree.gedcom4j.model.Individual;
+import pranavgade20.com.familytree.gedcom4j.parser.GedcomParser;
 
 import java.io.BufferedInputStream;
 import java.io.IOException;

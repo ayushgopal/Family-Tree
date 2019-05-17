@@ -1,6 +1,7 @@
 package pranavgade20.com.familytree;
 
 import android.content.Context;
+import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -46,18 +47,17 @@ public class ListBaseAdapter extends BaseAdapter {
             holder.name = (TextView) view.findViewById(R.id.textView_relation_name);
             holder.relation = (TextView) view.findViewById(R.id.textView_relation);
             holder.age = (TextView) view.findViewById(R.id.textView_relation_age);
+            holder.image = (ImageView) view.findViewById(R.id.imageView_more_details);
 
             view.setTag(holder);
         } else {
             holder = (ViewHolder) view.getTag();
         }
 
-        // Set any name you want here
         holder.name.setText(listDetailsArrayList.get(pos).getName());
-        // Set any email you want here
         holder.relation.setText(listDetailsArrayList.get(pos).getRelation());
-        //
         holder.age.setText(listDetailsArrayList.get(pos).getAge());
+        holder.image.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.edit_pencil));
 
         return view;
     }
@@ -66,7 +66,6 @@ public class ListBaseAdapter extends BaseAdapter {
         public TextView name;
         public TextView relation;
         public TextView age;
+        public ImageView image;
     }
 }
-
-//TODO : change this to add details in the list

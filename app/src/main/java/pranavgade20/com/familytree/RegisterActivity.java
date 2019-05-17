@@ -8,12 +8,12 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.gedcom4j.model.ChangeDate;
-import org.gedcom4j.model.Gedcom;
-import org.gedcom4j.model.Header;
-import org.gedcom4j.model.StringWithCustomFacts;
-import org.gedcom4j.model.Submitter;
-import org.gedcom4j.model.SubmitterReference;
+import pranavgade20.com.familytree.gedcom4j.model.ChangeDate;
+import pranavgade20.com.familytree.gedcom4j.model.Gedcom;
+import pranavgade20.com.familytree.gedcom4j.model.Header;
+import pranavgade20.com.familytree.gedcom4j.model.StringWithCustomFacts;
+import pranavgade20.com.familytree.gedcom4j.model.Submitter;
+import pranavgade20.com.familytree.gedcom4j.model.SubmitterReference;
 
 public class RegisterActivity extends AppCompatActivity {
 
@@ -29,7 +29,7 @@ public class RegisterActivity extends AppCompatActivity {
         EditText confirm_password = (EditText) findViewById(R.id.password_confirm_input);
 
         if (password.getText().toString().equals(confirm_password.getText().toString())) {
-            //TODO create a new gedcom
+            //TODO add password length verif
             gedcom.data = new Gedcom();
             Submitter s = new Submitter();
             s.setXref("@SUBM@");
@@ -39,8 +39,9 @@ public class RegisterActivity extends AppCompatActivity {
             ref.setSubmitter(s);
             h.setSubmitterReference(ref);
             gedcom.data.setHeader(h);
+            gedcom.data.addSubmitter(s, "@SUBM@");
 
-            if(!gedcom.save(getApplicationContext())) {
+            if(!gedcom.save()) {
                 Toast toast = Toast.makeText(getApplicationContext(), "Error! Failed to save file.", Toast.LENGTH_LONG);
                 toast.show();
             } else {

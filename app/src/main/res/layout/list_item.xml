@@ -8,8 +8,9 @@
     android:orientation="horizontal">
 
     <LinearLayout
-        android:layout_width="309dp"
+        android:layout_width="0dp"
         android:layout_height="match_parent"
+        android:layout_weight=".80"
         android:orientation="vertical"
         android:paddingLeft="12sp"
         android:paddingTop="4sp">
@@ -41,7 +42,10 @@
     </LinearLayout>
 
     <ImageView
-        android:layout_width="match_parent"
+        android:id="@+id/imageView_more_details"
+        android:layout_width="0dp"
         android:layout_height="match_parent"
-        app:srcCompat="@drawable/arrow_forward" />
+        android:layout_weight=".20"
+        android:adjustViewBounds="true"
+        app:srcCompat="@drawable/edit_pencil" />
 </LinearLayout>

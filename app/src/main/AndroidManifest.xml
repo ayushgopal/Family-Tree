@@ -22,7 +22,8 @@
         <activity android:name=".intermediateActivity" />
         <activity android:name=".homeActivity" />
         <activity android:name=".SearchResultsActivity" />
-        <activity android:name=".RegisterActivity"></activity>
+        <activity android:name=".RegisterActivity" />
+        <activity android:name=".AddIndividualActivity"></activity>
     </application>
 
 </manifest>

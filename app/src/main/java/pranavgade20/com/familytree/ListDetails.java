@@ -27,5 +27,3 @@ public class ListDetails {
         this.age = age;
     }
 }
-
-//TODO : change this to add details in the list

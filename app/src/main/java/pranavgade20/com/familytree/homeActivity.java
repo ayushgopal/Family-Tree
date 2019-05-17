@@ -22,4 +22,9 @@ public class homeActivity extends AppCompatActivity {
         intent.putExtra("query", query);
         startActivity(intent);
     }
+
+    public void addIndividual(View v) {
+        Intent intent = new Intent(getApplicationContext(), AddIndividualActivity.class);
+        startActivity(intent);
+    }
 }

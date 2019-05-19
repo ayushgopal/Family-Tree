@@ -47,7 +47,7 @@ public class baseActivity extends AppCompatActivity {
                 listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                        String id = relatives.get(i).getAge();
+                        String id = "@I" + relatives.get(i).getAge() + "@";
                         Intent intent;
                         if(id != null && !id.isEmpty()){
                             intent = new Intent(getApplicationContext(), baseActivity.class);
@@ -73,11 +73,11 @@ public class baseActivity extends AppCompatActivity {
             parentsFamily = null;
         }
         if (parentsFamily == null) {
-            ListDetails listDetails = new ListDetails();
-            listDetails.setRelation("Details not available");
-            listDetails.setName("Tap to return to home");
-            listDetails.setAge("");
-            ret.add(listDetails);
+//            ListDetails listDetails = new ListDetails();
+//            listDetails.setRelation("Details not available");
+//            listDetails.setName("Tap to return to home");
+//            listDetails.setAge("");
+//            ret.add(listDetails);
         } else {
             IndividualReference dadRef = parentsFamily.getHusband();
             IndividualReference momRef = parentsFamily.getWife();
@@ -90,14 +90,14 @@ public class baseActivity extends AppCompatActivity {
                 ListDetails listDetails = new ListDetails();
                 listDetails.setRelation("Father");
                 listDetails.setName(dad.getFormattedName());
-                listDetails.setAge(getIndividualAge(dad));
+                listDetails.setAge(getIndividualAge(dad).substring(2, 6));
                 ret.add(listDetails);
             }
             if (mom != null) {
                 ListDetails listDetails = new ListDetails();
                 listDetails.setRelation("Mother");
                 listDetails.setName(mom.getFormattedName());
-                listDetails.setAge(getIndividualAge(mom));
+                listDetails.setAge(getIndividualAge(mom).substring(2, 6));
                 ret.add(listDetails);
             }
             if (siblings.size() > 0) {
@@ -108,7 +108,7 @@ public class baseActivity extends AppCompatActivity {
                         ListDetails listDetails = new ListDetails();
                         listDetails.setRelation("Sibling"); // TODO add sibling gender ie sis/bro
                         listDetails.setName(i.getFormattedName());
-                        listDetails.setAge(getIndividualAge(i));
+                        listDetails.setAge(getIndividualAge(i).substring(2, 6));
                         ret.add(listDetails);
                     }
                 }
@@ -129,7 +129,7 @@ public class baseActivity extends AppCompatActivity {
                         ListDetails listDetails = new ListDetails();
                         listDetails.setRelation("Wife");
                         listDetails.setName(wife.getFormattedName());
-                        listDetails.setAge(getIndividualAge(wife));
+                        listDetails.setAge(getIndividualAge(wife).substring(2, 6));
                         ret.add(listDetails);
                     }
                 }
@@ -141,7 +141,7 @@ public class baseActivity extends AppCompatActivity {
                         ListDetails listDetails = new ListDetails();
                         listDetails.setRelation("Husband");
                         listDetails.setName(husband.getFormattedName());
-                        listDetails.setAge(getIndividualAge(husband));
+                        listDetails.setAge(getIndividualAge(husband).substring(2, 6));
                         ret.add(listDetails);
                     }
                 }
@@ -155,10 +155,18 @@ public class baseActivity extends AppCompatActivity {
                     ListDetails listDetails = new ListDetails();
                     listDetails.setRelation("Child"); // TODO add child gender ie son/daughter
                     listDetails.setName(i.getFormattedName());
-                    listDetails.setAge(getIndividualAge(i));
+                    listDetails.setAge(getIndividualAge(i).substring(2, 6));
                     ret.add(listDetails);
                 }
             }
+        }
+
+        if (ret.size() == 0) {
+            ListDetails listDetails = new ListDetails();
+            listDetails.setRelation("Details not available");
+            listDetails.setName("Tap to return to home");
+            listDetails.setAge("");
+            ret.add(listDetails);
         }
         relatives = ret;
         return ret;

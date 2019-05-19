@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,44 +36,52 @@ public class AddIndividualActivity extends AppCompatActivity {
         RadioButton rb = (RadioButton) findViewById(rg.getCheckedRadioButtonId());
         String gender = rb.getText().toString();
 
-        Individual individual = new Individual();
-        individual.setSex(gender);
-        String individualXref = "@I"+String.format("%04d", (gedcom.data.getIndividuals().size()+1))+"@";
-        individual.setXref(individualXref);
+        int errors = 0;
+        if (lastName == null || lastName.isEmpty()) {
+            errors ++;
+            Toast toast = Toast.makeText(getApplicationContext(), "Please enter last name.", Toast.LENGTH_LONG);
+            toast.show();
+        }
+        if (errors == 0) {
+            Individual individual = new Individual();
+            individual.setSex(gender);
+            String individualXref = "@I" + String.format("%04d", (gedcom.data.getIndividuals().size() + 1)) + "@";
+            individual.setXref(individualXref);
 
-        PersonalName name = new PersonalName();
-        name.setSurname(lastName);
-        name.setGivenName(firstName + " " + middleName);
-        name.setBasic(firstName);
-        List<PersonalName> nameList = new ArrayList<>();
-        nameList.add(name);
-        individual.setNames(nameList);
+            PersonalName name = new PersonalName();
+            name.setSurname(lastName);
+            name.setGivenName(firstName + " " + middleName);
+            name.setBasic(firstName);
+            List<PersonalName> nameList = new ArrayList<>();
+            nameList.add(name);
+            individual.setNames(nameList);
 
-        IndividualReference reference = new IndividualReference();
-        reference.setIndividual(individual);
+            IndividualReference reference = new IndividualReference();
+            reference.setIndividual(individual);
 
-        Family family = new Family();
-        if (gedcom.getGender(individual) == 'M') family.setHusband(reference);
-        else family.setWife(reference);
+            Family family = new Family();
+            if (gedcom.getGender(individual) == 'M') family.setHusband(reference);
+            else family.setWife(reference);
 
 
-        String familyXref ="@F"+gedcom.data.getNotes().get("@FAMILIESNOTE@").getLines().get(0)+"@";
-        family.setXref(familyXref);
-        gedcom.data.getNotes().get("@FAMILIESNOTE@").getLines().set(0, String.format("%04d", Integer.parseInt(gedcom.data.getNotes().get("@FAMILIESNOTE@").getLines().get(0))+1));
+            String familyXref = "@F" + gedcom.data.getNotes().get("@FAMILIESNOTE@").getLines().get(0) + "@";
+            family.setXref(familyXref);
+            gedcom.data.getNotes().get("@FAMILIESNOTE@").getLines().set(0, String.format("%04d", Integer.parseInt(gedcom.data.getNotes().get("@FAMILIESNOTE@").getLines().get(0)) + 1));
 
-        List<FamilySpouse> familySpouseList = new ArrayList<>();
-        FamilySpouse familySpouse = new FamilySpouse();
-        familySpouse.setFamily(family);
-        familySpouseList.add(familySpouse);
-        individual.setFamiliesWhereSpouse(familySpouseList);
+            List<FamilySpouse> familySpouseList = new ArrayList<>();
+            FamilySpouse familySpouse = new FamilySpouse();
+            familySpouse.setFamily(family);
+            familySpouseList.add(familySpouse);
+            individual.setFamiliesWhereSpouse(familySpouseList);
 
-        gedcom.data.addIndividual(individual, individualXref);
-        gedcom.data.addFamily(family, familyXref);
+            gedcom.data.addIndividual(individual, individualXref);
+            gedcom.data.addFamily(family, familyXref);
 
-        gedcom.save();
-        gedcom.load();
+            gedcom.save();
+            gedcom.load();
 
-        Intent intent = new Intent(getApplicationContext(), homeActivity.class);
-        startActivity(intent);
+            Intent intent = new Intent(getApplicationContext(), homeActivity.class);
+            startActivity(intent);
+        }
     }
 }

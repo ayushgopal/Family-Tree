@@ -25,7 +25,7 @@ public class SearchResultsActivity extends AppCompatActivity {
                 ListDetails listDetails = new ListDetails();
                 listDetails.setRelation(i.getValue().getNames().get(0).toString());
                 listDetails.setName(i.getValue().getNames().get(0).toString());
-                listDetails.setAge(i.getKey());
+                listDetails.setAge(i.getKey().substring(2, 6));
                 results.add(listDetails);
             }
         }
@@ -47,7 +47,7 @@ public class SearchResultsActivity extends AppCompatActivity {
                 listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                        String id = results.get(i).getAge();
+                        String id = "@I" + results.get(i).getAge() + "@";
                         Intent intent = new Intent(getApplicationContext(), baseActivity.class);
 
                         intent.putExtra("id", id);

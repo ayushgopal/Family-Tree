@@ -53,7 +53,17 @@ public class EditIndividualActivity extends AppCompatActivity {
         String parentID = ((EditText) findViewById(R.id.editText_parentID)).getText().toString();
         //TODO Verify data
 
-        if (!parentID.isEmpty() && parentID != null) {
+        if (parentID != null && !parentID.isEmpty()) {
+            try {
+                parentID = String.format("%04d", Integer.parseInt(parentID));
+            } catch (Exception E) {
+                Toast toast = Toast.makeText(getApplicationContext(), "Error! Incorrect Parent ID", Toast.LENGTH_LONG);
+                toast.show();
+
+                Intent intent = new Intent(getApplicationContext(), homeActivity.class);
+                startActivity(intent);
+            }
+
             Individual parent = gedcom.data.getIndividuals().get("@I" + parentID + "@");
             if (parent == null) {
                 Toast toast = Toast.makeText(getApplicationContext(), "Error! Parent not found, so no changes were made.", Toast.LENGTH_LONG);
@@ -79,7 +89,16 @@ public class EditIndividualActivity extends AppCompatActivity {
 
         String spouseID = ((EditText) findViewById(R.id.editText_spouseID)).getText().toString();
 
-        if (!spouseID.isEmpty() && spouseID != null) {
+        if (spouseID != null && !spouseID.isEmpty()) {
+            try {
+                spouseID = String.format("%04d", Integer.parseInt(spouseID));
+            } catch (Exception E) {
+                Toast toast = Toast.makeText(getApplicationContext(), "Error! Incorrect Spouse ID", Toast.LENGTH_LONG);
+                toast.show();
+
+                Intent intent = new Intent(getApplicationContext(), homeActivity.class);
+                startActivity(intent);
+            }
             Individual spouse = gedcom.data.getIndividuals().get("@I" + spouseID + "@");
             if (spouse == null) {
                 Toast toast = Toast.makeText(getApplicationContext(), "Error! Spouse not found, so no changes were made.", Toast.LENGTH_LONG);
@@ -109,8 +128,13 @@ public class EditIndividualActivity extends AppCompatActivity {
                 FamilySpouse husbandFamily = individual.getFamiliesWhereSpouse().get(0);
                 Family wifeFamily = spouse.getFamiliesWhereSpouse().get(0).getFamily();
                 if (wifeFamily.getChildren() != null) {
+                    List<FamilyChild> familiesWhereChild = new ArrayList<>();
+                    FamilyChild familyWhereChild = new FamilyChild();
+                    familyWhereChild.setFamily(husbandFamily.getFamily());
+                    familiesWhereChild.add(familyWhereChild);
                     for (IndividualReference i : wifeFamily.getChildren()) {
                         husbandFamily.getFamily().addChild(i);
+                        i.getIndividual().setFamiliesWhereChild(familiesWhereChild);
                     }
                 }
                 husbandFamily.getFamily().setWife(wifeFamily.getWife());
@@ -122,8 +146,13 @@ public class EditIndividualActivity extends AppCompatActivity {
                 FamilySpouse husbandFamily = spouse.getFamiliesWhereSpouse().get(0);
                 Family wifeFamily = individual.getFamiliesWhereSpouse().get(0).getFamily();
                 if (wifeFamily.getChildren() != null) {
+                    List<FamilyChild> familiesWhereChild = new ArrayList<>();
+                    FamilyChild familyWhereChild = new FamilyChild();
+                    familyWhereChild.setFamily(husbandFamily.getFamily());
+                    familiesWhereChild.add(familyWhereChild);
                     for (IndividualReference i : wifeFamily.getChildren()) {
                         husbandFamily.getFamily().addChild(i);
+                        i.getIndividual().setFamiliesWhereChild(familiesWhereChild);
                     }
                 }
                 husbandFamily.getFamily().setWife(wifeFamily.getWife());

@@ -8,9 +8,15 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import pranavgade20.com.familytree.gedcom4j.model.ChangeDate;
 import pranavgade20.com.familytree.gedcom4j.model.Gedcom;
 import pranavgade20.com.familytree.gedcom4j.model.Header;
+import pranavgade20.com.familytree.gedcom4j.model.NoteRecord;
 import pranavgade20.com.familytree.gedcom4j.model.StringWithCustomFacts;
 import pranavgade20.com.familytree.gedcom4j.model.Submitter;
 import pranavgade20.com.familytree.gedcom4j.model.SubmitterReference;
@@ -40,6 +46,14 @@ public class RegisterActivity extends AppCompatActivity {
             h.setSubmitterReference(ref);
             gedcom.data.setHeader(h);
             gedcom.data.addSubmitter(s, "@SUBM@");
+
+            NoteRecord record = new NoteRecord("@FAMILIESNOTE@");
+            List<String> lines = new ArrayList<>();
+            lines.add("0001");
+            record.setLines(lines);
+            Map<String, NoteRecord> noteRecordMap = new HashMap<String, NoteRecord>();
+            noteRecordMap.put("@FAMILIESNOTE@", record);
+            gedcom.data.setNotes(noteRecordMap);
 
             if(!gedcom.save()) {
                 Toast toast = Toast.makeText(getApplicationContext(), "Error! Failed to save file.", Toast.LENGTH_LONG);

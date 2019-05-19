@@ -18,6 +18,7 @@ public class MainActivity extends AppCompatActivity {
     public void signIn(View V) {
         Intent intent = new Intent(getApplicationContext(), intermediateActivity.class);
 
+//        intent.putExtra("url", "https://webtreeprint.com/tp_downloader.php?path=famous_gedcoms/royal92.ged&file=royal92.ged");
         intent.putExtra("url", "https://webtreeprint.com/tp_downloader.php?path=famous_gedcoms/royal92.ged&file=royal92.ged");
         startActivity(intent);
     }

@@ -23,7 +23,6 @@ import okhttp3.Response;
 
 public class intermediateActivity extends AppCompatActivity {
 
-
     String urlLoc = "http://heiner-eichmann.de/gedcom/simple.ged";
     OkHttpClient client = new OkHttpClient();
 
@@ -81,7 +80,11 @@ public class intermediateActivity extends AppCompatActivity {
             urlLoc = intent.getStringExtra("url");
         }
 
-        getHttpResponse();
+//        getHttpResponse();
+        gedcom.load();
+
+        Intent i = new Intent(getApplicationContext(), homeActivity.class);
+        startActivity(i);
     }
 
     public void showError(){

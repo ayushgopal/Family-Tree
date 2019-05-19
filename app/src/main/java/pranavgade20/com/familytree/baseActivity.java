@@ -21,6 +21,7 @@ import pranavgade20.com.familytree.gedcom4j.parser.GedcomParser;
 import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.StringBufferInputStream;
+import java.sql.Ref;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -64,6 +65,7 @@ public class baseActivity extends AppCompatActivity {
     public ArrayList<ListDetails> getListViewElements() {
         ArrayList<ListDetails> ret = new ArrayList<ListDetails>();
 
+        Gedcom g = gedcom.data;
         Family parentsFamily;
         try {
             parentsFamily = individual.getFamiliesWhereChild().get(0).getFamily();
@@ -72,13 +74,17 @@ public class baseActivity extends AppCompatActivity {
         }
         if (parentsFamily == null) {
             ListDetails listDetails = new ListDetails();
-            listDetails.setRelation("Parents");
-            listDetails.setName("N/A");
-            listDetails.setAge("details not available");
+            listDetails.setRelation("Details not available");
+            listDetails.setName("Tap to return to home");
+            listDetails.setAge("");
             ret.add(listDetails);
         } else {
-            Individual dad = parentsFamily.getHusband().getIndividual();
-            Individual mom = parentsFamily.getWife().getIndividual();
+            IndividualReference dadRef = parentsFamily.getHusband();
+            IndividualReference momRef = parentsFamily.getWife();
+            Individual dad = null;
+            Individual mom = null;
+            if (dadRef != null) dad = dadRef.getIndividual();
+            if (momRef != null) mom = momRef.getIndividual();
             List<IndividualReference> siblings = parentsFamily.getChildren();
             if (dad != null) {
                 ListDetails listDetails = new ListDetails();
@@ -94,15 +100,17 @@ public class baseActivity extends AppCompatActivity {
                 listDetails.setAge(getIndividualAge(mom));
                 ret.add(listDetails);
             }
-            if (siblings.size() > 0) { // TODO check if the sibling is the person itself
+            if (siblings.size() > 0) {
                 for (IndividualReference r : siblings) {
                     Individual i = r.getIndividual();
 
-                    ListDetails listDetails = new ListDetails();
-                    listDetails.setRelation("Sibling"); // TODO add sibling gender ie sis/bro
-                    listDetails.setName(i.getFormattedName());
-                    listDetails.setAge(getIndividualAge(i));
-                    ret.add(listDetails);
+                    if (!i.getXref().equals(individual.getXref())) {
+                        ListDetails listDetails = new ListDetails();
+                        listDetails.setRelation("Sibling"); // TODO add sibling gender ie sis/bro
+                        listDetails.setName(i.getFormattedName());
+                        listDetails.setAge(getIndividualAge(i));
+                        ret.add(listDetails);
+                    }
                 }
             }
         }
@@ -114,24 +122,33 @@ public class baseActivity extends AppCompatActivity {
             currentFamily = null;
         }
         if(currentFamily != null){
-            if(individual.getSex().toString().toLowerCase().charAt(0) == 'M') {
-                Individual wife = currentFamily.getWife().getIndividual();
-                ListDetails listDetails = new ListDetails();
-                listDetails.setRelation("Wife");
-                listDetails.setName(wife.getFormattedName());
-                listDetails.setAge(getIndividualAge(wife));
-                ret.add(listDetails);
+            if(gedcom.getGender(individual) == 'M') {
+                if (currentFamily.getWife() != null) {
+                    Individual wife = currentFamily.getWife().getIndividual();
+                    if (!wife.getXref().equals(individual.getXref())) {
+                        ListDetails listDetails = new ListDetails();
+                        listDetails.setRelation("Wife");
+                        listDetails.setName(wife.getFormattedName());
+                        listDetails.setAge(getIndividualAge(wife));
+                        ret.add(listDetails);
+                    }
+                }
             } else {
-                Individual husband = currentFamily.getHusband().getIndividual();
-                ListDetails listDetails = new ListDetails();
-                listDetails.setRelation("Husband");
-                listDetails.setName(husband.getFormattedName());
-                listDetails.setAge(getIndividualAge(husband));
-                ret.add(listDetails);
+                Log.e("A", "B");
+                if (currentFamily.getHusband() != null) {
+                    Individual husband = currentFamily.getHusband().getIndividual();
+                    if (!husband.getXref().equals(individual.getXref())) {
+                        ListDetails listDetails = new ListDetails();
+                        listDetails.setRelation("Husband");
+                        listDetails.setName(husband.getFormattedName());
+                        listDetails.setAge(getIndividualAge(husband));
+                        ret.add(listDetails);
+                    }
+                }
             }
 
             List<IndividualReference> children = currentFamily.getChildren();
-            if (children.size() > 0) {
+            if (children != null && children.size() > 0) {
                 for (IndividualReference r : children) {
                     Individual i = r.getIndividual();
 
@@ -161,10 +178,16 @@ public class baseActivity extends AppCompatActivity {
         if (intent.hasExtra("id")){
             String indivisualId = intent.getStringExtra("id");
             individual = gedcom.data.getIndividuals().get(indivisualId);
+
+            TextView textView = (TextView) findViewById(R.id.textView_name);
+            textView.setText(individual.getFormattedName());
         } else {
             //TODO error
             Toast toast = Toast.makeText(getApplicationContext(), "Error!", Toast.LENGTH_LONG);
             toast.show();
+
+            Intent i = new Intent(getApplicationContext(), homeActivity.class);
+            startActivity(i);
         }
 
         setListElements();
@@ -173,5 +196,11 @@ public class baseActivity extends AppCompatActivity {
     public void onFabPress(View v){
         Intent i = new Intent(getApplicationContext(), homeActivity.class);
         startActivity(i);
+    }
+
+    public void onEditPress(View v) {
+        Intent intent = new Intent(getApplicationContext(), EditIndividualActivity.class);
+        intent.putExtra("id", individual.getXref());
+        startActivity(intent);
     }
 }

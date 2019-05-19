@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import pranavgade20.com.familytree.gedcom4j.model.Family;
+import pranavgade20.com.familytree.gedcom4j.model.FamilySpouse;
 import pranavgade20.com.familytree.gedcom4j.model.Individual;
 import pranavgade20.com.familytree.gedcom4j.model.IndividualReference;
 import pranavgade20.com.familytree.gedcom4j.model.PersonalName;
@@ -42,6 +43,7 @@ public class AddIndividualActivity extends AppCompatActivity {
         PersonalName name = new PersonalName();
         name.setSurname(lastName);
         name.setGivenName(firstName + " " + middleName);
+        name.setBasic(firstName);
         List<PersonalName> nameList = new ArrayList<>();
         nameList.add(name);
         individual.setNames(nameList);
@@ -50,10 +52,22 @@ public class AddIndividualActivity extends AppCompatActivity {
         reference.setIndividual(individual);
 
         Family family = new Family();
-        family.setHusband(reference);
+        if (gedcom.getGender(individual) == 'M') family.setHusband(reference);
+        else family.setWife(reference);
+
+
+        String familyXref ="@F"+gedcom.data.getNotes().get("@FAMILIESNOTE@").getLines().get(0)+"@";
+        family.setXref(familyXref);
+        gedcom.data.getNotes().get("@FAMILIESNOTE@").getLines().set(0, String.format("%04d", Integer.parseInt(gedcom.data.getNotes().get("@FAMILIESNOTE@").getLines().get(0))+1));
+
+        List<FamilySpouse> familySpouseList = new ArrayList<>();
+        FamilySpouse familySpouse = new FamilySpouse();
+        familySpouse.setFamily(family);
+        familySpouseList.add(familySpouse);
+        individual.setFamiliesWhereSpouse(familySpouseList);
 
         gedcom.data.addIndividual(individual, individualXref);
-        gedcom.data.addFamily(family, "@F"+String.format("%04d", (gedcom.data.getFamilies().size()+1))+"@");
+        gedcom.data.addFamily(family, familyXref);
 
         gedcom.save();
         gedcom.load();

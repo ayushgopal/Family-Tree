@@ -1,13 +1,16 @@
 package pranavgade20.com.familytree;
 
+import android.app.Activity;
 import android.content.Context;
 import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -57,7 +60,7 @@ public class ListBaseAdapter extends BaseAdapter {
         holder.name.setText(listDetailsArrayList.get(pos).getName());
         holder.relation.setText(listDetailsArrayList.get(pos).getRelation());
         holder.age.setText(listDetailsArrayList.get(pos).getAge());
-        holder.image.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.edit_pencil));
+        holder.image.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.arrow_forward));
 
         return view;
     }

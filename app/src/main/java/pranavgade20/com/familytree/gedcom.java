@@ -6,10 +6,21 @@ import android.content.SharedPreferences;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
 
+import okhttp3.FormBody;
+import okhttp3.MultipartBody;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
 import pranavgade20.com.familytree.gedcom4j.io.reader.GedcomFileReader;
 import pranavgade20.com.familytree.gedcom4j.model.Gedcom;
+import pranavgade20.com.familytree.gedcom4j.model.Header;
 import pranavgade20.com.familytree.gedcom4j.model.Individual;
 import pranavgade20.com.familytree.gedcom4j.model.IndividualEvent;
+import pranavgade20.com.familytree.gedcom4j.model.NoteRecord;
+import pranavgade20.com.familytree.gedcom4j.model.StringWithCustomFacts;
+import pranavgade20.com.familytree.gedcom4j.model.Submitter;
+import pranavgade20.com.familytree.gedcom4j.model.SubmitterReference;
 import pranavgade20.com.familytree.gedcom4j.parser.GedcomParser;
 import pranavgade20.com.familytree.gedcom4j.writer.GedcomWriter;
 
@@ -24,7 +35,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class gedcom {
     public static Gedcom data = null;
@@ -32,6 +46,9 @@ public class gedcom {
     private final static String file_name = "gdata.ged";
 
     public static String writtenData = "";
+    public static String getUrl = "";
+    public static String postUrl = "";
+    public static String familyCode = "";
 
     public static String getBirth(Individual i) {
         try {
@@ -56,52 +73,17 @@ public class gedcom {
         context = c;
     }
 
-//    public static boolean save(Context c) {
-////        //get name from shared pref,
-////        SharedPreferences pref = c.getSharedPreferences("familytree.file", Context.MODE_PRIVATE);
-////        SharedPreferences.Editor editor = pref.edit();
-////        //save in internal as name from shared prefs
-////        if (pref.getString("file_name", null) == null) {
-////            editor.putString("file_name", file_name);
-////        }
-////
-////        String fileName = pref.getString("file_name", file_name);
-//
-//        context = c;
-//        try {
-//            context.deleteFile(file_name);
-//            File file = new File(context.getFilesDir(), file_name);
-//
-//            GedcomWriter writer = new GedcomWriter(gedcom.data);
-//            writer.write(file);
-//            return true;
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//            return false;
-//        }
-//    }
-
     public static boolean save(){
         try {
-            Validator validator = new Validator(gedcom.data);
+            Validator validator = new Validator(data);
             validator.validate();
             // TODO do some validation stuff
 
             context.deleteFile(file_name);
             File file = new File(context.getFilesDir(), file_name);
 
-            final GedcomWriter writer = new GedcomWriter(gedcom.data);
+            final GedcomWriter writer = new GedcomWriter(data);
             writer.write(file);
-
-            OutputStream outputStream = new OutputStream() {
-                @Override
-                public void write(int i) throws IOException {
-                    writtenData = writtenData + (char) (i & 0xFF);
-                }
-            };
-//            writer.write(outputStream);
-
-            Log.e("A" ,"B");
 
             return true;
         } catch (Exception e) {
@@ -111,19 +93,9 @@ public class gedcom {
         }
     }
 
-    public static boolean save2(){  //TODO remove
+    public static boolean writeData(){
         try {
-            Validator validator = new Validator(gedcom.data);
-            validator.validate();
-            // TODO do some validation stuff
-            Log.e("A" ,"B");
-            //check family here
-
-//            context.deleteFile(file_name);
-//            File file = new File(context.getFilesDir(), file_name);
-
-            final GedcomWriter writer = new GedcomWriter(gedcom.data);
-//            writer.write(file);
+            final GedcomWriter writer = new GedcomWriter(data);
 
             OutputStream outputStream = new OutputStream() {
                 @Override
@@ -134,11 +106,8 @@ public class gedcom {
             writtenData = "";
             writer.write(outputStream);
 
-            Log.e("A" ,"B");
-
             return true;
         } catch (Exception e) {
-            Log.e("ERROR", "writing file failed");
             e.printStackTrace();
             return false;
         }
@@ -146,30 +115,44 @@ public class gedcom {
 
     public static void load(){
         try {
-//            FileInputStream inputStream = context.openFileInput(file_name);
-//            GedcomParser parser = new GedcomParser();
-//            parser.load(new BufferedInputStream(inputStream));
-//            data = null;
-//            data = parser.getGedcom();
             InputStream inputStream = context.openFileInput(file_name);
 
             if ( inputStream != null ) {
-                InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
-                BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
-
                 GedcomParser parser = new GedcomParser();
                 parser.load(new BufferedInputStream(inputStream));
                 data = null;
                 data = parser.getGedcom();
 
-                Validator validator = new Validator(gedcom.data);
+                Validator validator = new Validator(data);
                 validator.validate();
 
                 inputStream.close();
             } else throw new Exception("input file is null");
+
+            //Try reading the file to see if loaded correctly
+            String x = data.getHeader().toString();
         } catch (Exception e) {
             Log.e("ERROR", "reading file failed");
             e.printStackTrace();
+
+            data = new Gedcom();
+            Submitter s = new Submitter();
+            s.setXref("@SUBM@");
+            s.setName(new StringWithCustomFacts("ERROR"));
+            Header h = new Header();
+            SubmitterReference ref = new SubmitterReference();
+            ref.setSubmitter(s);
+            h.setSubmitterReference(ref);
+            data.setHeader(h);
+            data.addSubmitter(s, "@SUBM@");
+
+            NoteRecord record = new NoteRecord("@FAMILIESNOTE@");
+            List<String> lines = new ArrayList<>();
+            lines.add("0001");
+            record.setLines(lines);
+            Map<String, NoteRecord> noteRecordMap = new HashMap<String, NoteRecord>();
+            noteRecordMap.put("@FAMILIESNOTE@", record);
+            data.setNotes(noteRecordMap);
         }
     }
 }

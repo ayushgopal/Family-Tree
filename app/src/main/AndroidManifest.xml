@@ -24,7 +24,8 @@
         <activity android:name=".SearchResultsActivity" />
         <activity android:name=".RegisterActivity" />
         <activity android:name=".AddIndividualActivity" />
-        <activity android:name=".EditIndividualActivity"></activity>
+        <activity android:name=".EditIndividualActivity" />
+        <activity android:name=".UpdateServerActivity"></activity>
     </application>
 
 </manifest>

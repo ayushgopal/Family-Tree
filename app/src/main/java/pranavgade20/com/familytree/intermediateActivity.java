@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.TextView;
 
 import pranavgade20.com.familytree.gedcom4j.exception.GedcomParserException;
@@ -34,12 +35,14 @@ public class intermediateActivity extends AppCompatActivity {
             @Override
             public void onFailure(Call call, IOException e) {
                 Log.e("Error!", "exception", e);
+                showError();
             }
 
             @Override
             public void onResponse(Call call, Response response) throws IOException {
                 if (!response.isSuccessful()) {
                     Log.e("Error!", response.toString());
+                    showError();
                 } else {
                     String str = response.body().string();
                     parseGedcom(str);
@@ -80,11 +83,12 @@ public class intermediateActivity extends AppCompatActivity {
             urlLoc = intent.getStringExtra("url");
         }
 
-//        getHttpResponse();
-        gedcom.load();
+        getHttpResponse();
+//        gedcom.load();
+//        gedcom.save();
 
-        Intent i = new Intent(getApplicationContext(), homeActivity.class);
-        startActivity(i);
+//        Intent i = new Intent(getApplicationContext(), homeActivity.class);
+//        startActivity(i);
     }
 
     public void showError(){
@@ -95,5 +99,12 @@ public class intermediateActivity extends AppCompatActivity {
                 t.setText("An error occured. Please try again.");
             }
         });
+    }
+
+    public void updateFromInternal(View v) {
+        gedcom.load();
+
+        Intent intent = new Intent(getApplicationContext(), homeActivity.class);
+        startActivity(intent);
     }
 }

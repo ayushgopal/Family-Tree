@@ -47,11 +47,16 @@ public class SearchResultsActivity extends AppCompatActivity {
                 listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                        String id = "@I" + results.get(i).getAge() + "@";
-                        Intent intent = new Intent(getApplicationContext(), baseActivity.class);
+                        if (results.get(0).getAge().isEmpty() || results.get(0).getAge().equals("")){
+                            Intent intent = new Intent(getApplicationContext(), homeActivity.class);
+                            startActivity(intent);
+                        } else {
+                            String id = "@I" + results.get(i).getAge() + "@";
+                            Intent intent = new Intent(getApplicationContext(), baseActivity.class);
 
-                        intent.putExtra("id", id);
-                        startActivity(intent);
+                            intent.putExtra("id", id);
+                            startActivity(intent);
+                        }
                     }
                 });
             }
